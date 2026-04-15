@@ -1,0 +1,26 @@
+gitlabUrl: ""
+runnerRegistrationToken: "" # Should be provided via env or manual step
+rbac:
+  create: true
+  serviceAccountName: default
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+runners:
+  config: |
+    [[runners]]
+      [runners.kubernetes]
+        namespace = "{{ .Release.Namespace }}"
+        image = "ubuntu:22.04"
+# Переопределение probes для контейнера runner
+livenessProbe:
+  initialDelaySeconds: 10   # первая проверка через 10 сек (было 60)
+  periodSeconds: 10         # проверять каждые 10 сек (было 60)
+  timeoutSeconds: 5
+  failureThreshold: 2       # после 2 неудач рестарт (было 3)
+readinessProbe:
+  initialDelaySeconds: 5    # первая проверка через 5 сек
+  periodSeconds: 5          # каждые 5 сек
+  timeoutSeconds: 3
+  failureThreshold: 2

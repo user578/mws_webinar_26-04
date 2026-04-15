@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+      annotations:
+        # для того чтобы поды переразворачивались при каждом деплое
+        rollme: {{ .Values.rollTimestamp | default (now | date "20060102150405") | quote }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | default "Always" }}
+        ports:
+        - containerPort: {{ .Values.service.targetPort | default 8080 }}
+          name: http
+        env:
+        - name: APP_ENV
+          value: {{ .Values.environment | default "production" }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}

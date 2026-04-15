@@ -1,0 +1,55 @@
+# https://gitlab.com/gitlab-org/charts/gitlab/-/blob/v9.10.1/values.yaml?ref_type=tags
+global:
+  edition: ce
+  hosts:
+    domain: webinar-26-04.nufl.ru
+    https: true
+  ingress:
+    class: nginx
+    configureCertmanager: false
+    tls:
+      enabled: true
+      secretName: gitlab-tls-secret
+
+installCertmanager: false
+
+nginx-ingress:
+  enabled: false # Using the separately installed nginx-ingress
+
+prometheus:
+  install: false # Disable for single-node cluster resource savings
+
+gitlab-runner:
+  install: false
+
+gitlab:
+  webservice:
+    resources:
+      requests:
+        memory: 1.5Gi
+        cpu: 500m
+  sidekiq:
+    resources:
+      requests:
+        memory: 1Gi
+        cpu: 200m
+  gitaly:
+    persistence:
+      storageClass: mws
+      size: 10Gi
+
+postgresql:
+  persistence:
+    storageClass: mws
+    size: 5Gi
+
+redis:
+  master:
+    persistence:
+      storageClass: mws
+      size: 2Gi
+
+minio:
+  persistence:
+    storageClass: mws
+    size: 10Gi

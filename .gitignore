@@ -1,0 +1,10 @@
+.idea
+.DS_Store
+.terraform
+.terraform.lock.hcl
+*.tfstate*
+*.tfvars
+*.tfvars.json
+*_sa_key.json
+config
+secrets
